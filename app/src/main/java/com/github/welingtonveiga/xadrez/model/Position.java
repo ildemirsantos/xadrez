@@ -9,7 +9,7 @@ public class Position {
         if (isInBoardPosition(x) && isInBoardPosition(y))
             return new Position(x, y);
         else
-            throw new IllegalArgumentException("Out of range position");
+            throw new IllegalArgumentException("Out of range position.");
     }
 
     private Position(int row, int col) {

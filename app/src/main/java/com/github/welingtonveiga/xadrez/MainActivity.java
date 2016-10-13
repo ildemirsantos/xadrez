@@ -18,6 +18,7 @@ import com.github.welingtonveiga.xadrez.model.Position;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String BOARD_BACKGROUND = "#b2ebf2";
     private Board game = Board.newGame();
 
     @Override
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
                 final int color;
                 if ( (i+j) % 2 != 0) {
-                    color = Color.parseColor("#b2ebf2");
+                    color = Color.parseColor(BOARD_BACKGROUND);
                 } else {
                     color = Color.WHITE;
                 }

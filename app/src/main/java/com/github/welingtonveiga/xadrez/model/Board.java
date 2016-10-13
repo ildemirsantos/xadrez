@@ -1,10 +1,7 @@
 package com.github.welingtonveiga.xadrez.model;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class Board {
 
@@ -29,10 +26,6 @@ public class Board {
 
     private Board(){
 
-    }
-
-    public Piece getAt(int x, int y) {
-        return getAt(Position.of(x, y));
     }
 
     public Piece getAt(Position p) {
