@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements BoardUI {
 
     public static final String BOARD_BACKGROUND = "#b2ebf2";
     private Board game = Board.newGame();
-    private HashMap<Position, View> boardViews = new HashMap<>();
+    private HashMap<Position, ViewGroup> boardViews = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +55,20 @@ public class MainActivity extends AppCompatActivity implements BoardUI {
 
     @NonNull
     private FrameLayout createColLayout(Position position) {
-        final Piece piece = game.getAt(position);
         final FrameLayout positionContent = new FrameLayout(this);
         positionContent.setLayoutParams(new LinearLayout.LayoutParams( positionSize(),  positionSize()));
         positionContent.setTag(position);
+
+        updatePiece(position, positionContent);
+        return positionContent;
+    }
+
+    private void updatePiece(Position position, ViewGroup positionContent) {
+        final Piece piece = game.getAt(position);
+        positionContent.removeAllViewsInLayout();
         if (piece != Piece.NONE) {
             positionContent.addView(createPieceView(piece));
         }
-        return positionContent;
     }
 
     @Nullable
@@ -74,10 +81,11 @@ public class MainActivity extends AppCompatActivity implements BoardUI {
 
     @Override
     public void repaint() {
-        for (Map.Entry<Position, View> pos : boardViews.entrySet()) {
-            View v = pos.getValue();
+        for (Map.Entry<Position, ViewGroup> pos : boardViews.entrySet()) {
+            ViewGroup v = pos.getValue();
             Position p = pos.getKey();
             v.setBackgroundColor(resolveBackgroundColor(p));
+            updatePiece(p, v);
         }
     }
 

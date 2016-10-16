@@ -38,9 +38,25 @@ public class Board {
         }
     }
 
-
     public boolean isInBoard(Position position) {
         return position.getRow() >= 0 && position.getRow() < DIMENSION_SIZE
                 && position.getCol() >= 0 && position.getCol() < DIMENSION_SIZE;
+    }
+
+
+    public boolean isEmpty(Position position) {
+        return getAt(position) == Piece.NONE;
+    }
+
+    public void move(Position from, Position to) {
+        Piece source = getAt(from);
+        Piece target = getAt(to);
+
+        if (source!=Piece.NONE && source.getColor()!=target.getColor()) {
+            pieces.put(to, source);
+            pieces.put(from, Piece.NONE);
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 }
