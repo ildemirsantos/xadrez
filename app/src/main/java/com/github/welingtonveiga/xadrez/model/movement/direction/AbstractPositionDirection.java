@@ -15,6 +15,14 @@ public abstract class AbstractPositionDirection implements  PositionDirection{
     @Override
     abstract public Position get();
 
+    protected int getCol() {
+        return col;
+    }
+
+    protected int getRow() {
+        return row;
+    }
+
     protected int incAndGetCol() {
         return ++col;
     }

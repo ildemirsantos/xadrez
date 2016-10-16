@@ -12,9 +12,7 @@ import java.util.Set;
 public abstract class AbstractMovement implements PieceMovement{
 
     @Override
-    public Set<Position> ableMoves(Position current, Board board) {
-        return null;
-    }
+    public abstract Set<Position> ableMoves(Position current, Board board);
 
     protected abstract int getMaxMoves();
 
