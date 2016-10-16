@@ -1,7 +1,6 @@
-package com.github.welingtonveiga.xadrez.boardui;
+package com.github.welingtonveiga.xadrez.view;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 
 import com.github.welingtonveiga.xadrez.model.Board;
@@ -9,19 +8,19 @@ import com.github.welingtonveiga.xadrez.model.Piece;
 import com.github.welingtonveiga.xadrez.model.Position;
 import com.github.welingtonveiga.xadrez.model.movement.PieceMovement;
 
-import java.util.HashMap;
 import java.util.Set;
 
 public class PieceSelectionClickListener implements View.OnClickListener{
 
     private static final String TAG = PieceSelectionClickListener.class.getName();
+    private static int DEFAULT_COLOR_KEY = 1;
 
     private final Board board;
-    private final HashMap<Position, View> ui;
+    private final BoardUI ui;
     private Position selected = null;
 
 
-    public PieceSelectionClickListener(Board board, HashMap<Position, View> ui) {
+    public PieceSelectionClickListener(Board board, BoardUI ui) {
         this.board = board;
         this.ui = ui;
     }
@@ -32,15 +31,19 @@ public class PieceSelectionClickListener implements View.OnClickListener{
         Position clickedPosition = (Position) view.getTag();
         Piece piece = board.getAt(clickedPosition);
 
-        PieceMovement movement = piece.getMovement();
-        Set<Position> ableMoves = movement.ableMoves(clickedPosition, board);
+        if (piece != Piece.NONE) {
 
-        view.setBackgroundColor(Color.BLUE);
-        for (Position position : ableMoves) {
-            ui.get(position).setBackgroundColor(Color.GREEN);
+            ui.repaint();
+
+            PieceMovement movement = piece.getMovement();
+            Set<Position> ableMoves = movement.ableMoves(clickedPosition, board);
+
+            view.setBackgroundColor(Color.BLUE);
+
+            for (Position position : ableMoves) {
+                View v = ui.getViewAt(position);
+                v.setBackgroundColor(Color.GREEN);
+            }
         }
-
-
-
     }
 }
