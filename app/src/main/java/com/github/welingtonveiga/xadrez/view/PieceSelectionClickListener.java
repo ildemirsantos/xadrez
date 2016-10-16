@@ -41,8 +41,14 @@ public class PieceSelectionClickListener implements View.OnClickListener{
             view.setBackgroundColor(Color.BLUE);
 
             for (Position position : ableMoves) {
+                Piece target  = board.getAt(clickedPosition);
+                int color = Color.GREEN;
+                if (target != Piece.NONE) {
+                    color = Color.RED;
+                }
+
                 View v = ui.getViewAt(position);
-                v.setBackgroundColor(Color.GREEN);
+                v.setBackgroundColor(color);
             }
         }
     }
