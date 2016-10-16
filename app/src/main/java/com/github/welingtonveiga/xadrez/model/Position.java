@@ -6,10 +6,7 @@ public class Position {
     private final int col;
 
     public static Position of(int x, int y) {
-        if (isInBoardPosition(x) && isInBoardPosition(y))
-            return new Position(x, y);
-        else
-            throw new IllegalArgumentException("Out of range position.");
+        return new Position(x, y);
     }
 
     private Position(int row, int col) {
@@ -23,11 +20,6 @@ public class Position {
 
     public int getCol() {
         return col;
-    }
-
-
-    private static boolean isInBoardPosition(int x) {
-        return x >= 0 && x < 8;
     }
 
     @Override

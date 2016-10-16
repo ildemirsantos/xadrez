@@ -1,5 +1,7 @@
 package com.github.welingtonveiga.xadrez.model;
 
+import com.github.welingtonveiga.xadrez.model.exception.OutOfBoardException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +31,16 @@ public class Board {
     }
 
     public Piece getAt(Position p) {
-        return pieces.get(p);
+        if (isInBoard(p)) {
+            return pieces.get(p);
+        } else {
+            throw  new OutOfBoardException(p);
+        }
     }
 
 
+    public boolean isInBoard(Position position) {
+        return position.getRow() >= 0 && position.getRow() < DIMENSION_SIZE
+                && position.getCol() >= 0 && position.getCol() < DIMENSION_SIZE;
+    }
 }

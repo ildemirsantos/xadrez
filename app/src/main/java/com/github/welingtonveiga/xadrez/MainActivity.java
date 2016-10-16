@@ -12,14 +12,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.github.welingtonveiga.xadrez.boardui.PieceSelectionClickListener;
 import com.github.welingtonveiga.xadrez.model.Board;
 import com.github.welingtonveiga.xadrez.model.Piece;
 import com.github.welingtonveiga.xadrez.model.Position;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String BOARD_BACKGROUND = "#b2ebf2";
     private Board game = Board.newGame();
+    private HashMap<Position, View> boardUI = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 Position position = Position.of(i, j);
                 final FrameLayout positionContent = new FrameLayout(this);
                 positionContent.setLayoutParams(new LinearLayout.LayoutParams(positionSize, positionSize));
-                positionContent.setTag(position.hashCode());
+                positionContent.setTag(position);
 
                 final int color;
                 if ( (i+j) % 2 != 0) {
@@ -55,17 +59,11 @@ public class MainActivity extends AppCompatActivity {
                    ImageView img = new ImageView(this);
                    img.setImageResource(getResources().getIdentifier(piece.name().toLowerCase(), "drawable", this.getPackageName()));
                    img.setLayoutParams(new LinearLayout.LayoutParams(positionSize, positionSize));
-
-                   img.setOnClickListener(new View.OnClickListener() {
-                       @Override
-                       public void onClick(View view) {
-                            positionContent.setBackgroundColor(Color.GREEN);
-                       }
-                   });
-
                    positionContent.addView(img);
                 }
 
+                positionContent.setOnClickListener(new PieceSelectionClickListener(game, boardUI));
+                boardUI.put(position, positionContent);
                 line.addView(positionContent);
             }
         }
@@ -93,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return  (int) Math.floor(size*0.85);
-
     }
 
 }
