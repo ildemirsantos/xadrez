@@ -11,6 +11,9 @@ import java.util.Set;
 
 public class PawnMovement implements PieceMovement {
 
+    private static final int WHITE_DIRECTION = -1;
+    private static final int BLACK_DIRECTION = +1;
+
     @Override
     public Set<Position> ableMoves(Position current, Board board) {
         final Set<Position> ables;
@@ -27,28 +30,30 @@ public class PawnMovement implements PieceMovement {
 
     @NonNull
     private Set<Position> resolveAbleMoves(Position current, Board board, Piece pawn) {
-        Set<Position> ables;
-        int direction = -1;
-        if (pawn.getColor() == Piece.Color.BLACK) {
-            direction = +1;
-        }
-        return resolveAbleMoves(current, board, pawn, direction);
-    }
+        int direction = getDirection(pawn);
 
-    @NonNull
-    private Set<Position> resolveAbleMoves(Position current, Board board, Piece pawn, int direction) {
         Set<Position> ables = new HashSet<>();
         Position position = getFrontPosition(current, direction);
 
-        ables.addAll(getAbleFrontPosition(board, position));
-        if (!ables.isEmpty()) {
-            ables.addAll(getAbleInitialFrontExtra(board, pawn, current, getFrontPosition(position, direction)));
-        }
         ables.addAll(getAbleEnemyPosition(board, pawn, getLeftPosition(current, direction)));
         ables.addAll(getAbleEnemyPosition(board, pawn, getRightPosition(current, direction)));
+        ables.addAll(getAbleFrontPosition(board, position));
+
+        if (ables.contains(position)) {
+            ables.addAll(getAbleInitialFrontExtra(board, pawn, current, getFrontPosition(position, direction)));
+        }
 
         return ables;
     }
+
+    private int getDirection(Piece pawn) {
+        int direction = WHITE_DIRECTION;
+        if (pawn.getColor() == Piece.Color.BLACK) {
+            direction = BLACK_DIRECTION;
+        }
+        return direction;
+    }
+
 
     private Set<Position> getAbleFrontPosition(Board board,Position position) {
         Set<Position> ables = new HashSet<>();
@@ -60,10 +65,22 @@ public class PawnMovement implements PieceMovement {
 
     private Set<Position> getAbleInitialFrontExtra(Board board, Piece pawn, Position current, Position position) {
         Set<Position> ables = new HashSet<>();
-        if (board.isInBoard(position) && pawn.getInitialPositions().contains(current) && (board.isEmpty(position) || hasAnEnemy(board, pawn, position))){
+        if (board.isInBoard(position) && pawn.isInitial(current) && (board.isEmpty(position) || board.hasEnemyAt(pawn, position))){
             ables.add(position);
         }
         return ables;
+    }
+
+    private  Set<Position> getAbleEnemyPosition(Board board, Piece pawn, Position enemy) {
+        Set<Position> ables = new HashSet<>();
+        if (board.isInBoard(enemy) && hasAnEnemy(board, pawn, enemy)) {
+            ables.add(enemy);
+        }
+        return ables;
+    }
+
+    private boolean hasAnEnemy(Board board, Piece pawn, Position position) {
+        return !board.isEmpty(position) && board.getAt(position).getColor() == pawn.getColor().inverse();
     }
 
     private Position getFrontPosition(Position current, int direction) {
@@ -76,17 +93,5 @@ public class PawnMovement implements PieceMovement {
 
     private Position getLeftPosition(Position current, int direction) {
         return Position.of(current.getRow()+direction, current.getCol()-1);
-    }
-
-    private  Set<Position> getAbleEnemyPosition(Board board, Piece pawn, Position left) {
-        Set<Position> ables = new HashSet<>();
-        if (board.isInBoard(left) && hasAnEnemy(board, pawn, left)) {
-            ables.add(left);
-        }
-        return ables;
-    }
-
-    private boolean hasAnEnemy(Board board, Piece pawn, Position position) {
-        return !board.isEmpty(position) && board.getAt(position).getColor() == pawn.getColor().inverse();
     }
 }

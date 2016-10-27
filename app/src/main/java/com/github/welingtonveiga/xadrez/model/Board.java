@@ -48,6 +48,16 @@ public class Board {
         return getAt(position) == Piece.NONE;
     }
 
+    public boolean hasEnemyAt(Piece piece, Position p) {
+        Piece enemyCandidate = getAt(p);
+        return enemyCandidate!= Piece.NONE && enemyCandidate.getColor()!=piece.getColor();
+    }
+
+    public boolean areEnemies(Position position, Position enemyPosition) {
+        Piece piece = getAt(position);
+        return hasEnemyAt(piece, enemyPosition);
+    }
+
     public void move(Position from, Position to) {
         Piece source = getAt(from);
         Piece target = getAt(to);
@@ -59,4 +69,5 @@ public class Board {
             throw new IllegalArgumentException();
         }
     }
+
 }
